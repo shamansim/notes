@@ -7,14 +7,14 @@
 #   $ notes                                (opens the file in your editor)
 #
 # Produces:
-#   YYYY-MM.txt in your $NOTES_DIRECTORY (this is set below).
+#   YYYY-MM-DD.txt in your $NOTES_DIRECTORY (this is set below).
 
 set -e
 
 readonly NOTES_DIRECTORY="${NOTES_DIRECTORY:-${HOME}/notes}"
 readonly NOTES_EDITOR="${EDITOR}"
 
-readonly NOTES_FILE="$(date +%Y-%m).txt"
+readonly NOTES_FILE="$(date +%Y-%m-%d).txt"
 readonly NOTES_PATH="${NOTES_DIRECTORY}/${NOTES_FILE}"
 
 if [ ! -d "${NOTES_DIRECTORY}" ]; then
@@ -32,10 +32,10 @@ fi
 
 if [ ${#} -eq 0 ]; then
     if [ -p "/dev/stdin" ]; then
-        (cat; printf "\n\n") >> "${NOTES_PATH}"
+        (cat; printf "\n\n$(date +%F) $(date +%T)\t") >> "${NOTES_PATH}"
     else
         eval "${NOTES_EDITOR}" "${NOTES_PATH}"
     fi
 else
-    printf "%s\n\n" "${*}" >> "${NOTES_PATH}"
+    printf "%s\n\n$(date +%F) $(date +%T)\t${*}" >> "${NOTES_PATH}"
 fi
